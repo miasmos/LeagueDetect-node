@@ -23,7 +23,7 @@ LeagueDetect.prototype._main = function() {
   var self = this;
 
   this.mainInterval = setInterval(function() {
-    if (!this.appTimeout) {
+    if (!self.appTimeout) {
       if (self.lastLine == -1 && self.file == null && !self.appTimeout) {
         self._getNewestFile(self.opts.fullpath, function(file) {
           if (file) {

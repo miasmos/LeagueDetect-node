@@ -28,3 +28,4 @@ LogEnd
 LoadConnectError  
 ReplayConnectError  
 ReplayEndGameError  
+CrashError
