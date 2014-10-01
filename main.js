@@ -28,7 +28,7 @@ LeagueDetect.prototype._main = function() {
         self._getNewestFile(self.opts.fullpath, function(file) {
           if (file) {
             if (self._isRecentFile(file.ctime) && self._isRecentlyModifiedFile(file.mtime) && !self.appTimeout) {
-              console.log('Found game');
+              if (self.opts.debug) {console.log('Found game');}
               self.waiting = false;
               self.file = file;
               self._readLines(self.file.file, function(line, data, end) {
@@ -38,7 +38,7 @@ LeagueDetect.prototype._main = function() {
             } else {
               if (self.waiting != true) {
                 self.waiting = true;
-                console.log('Waiting for game to start...');
+                if (self.opts.debug) {console.log('Waiting for game to start...');}
                 self.events.emit('Waiting');
               }
             }
@@ -70,48 +70,48 @@ LeagueDetect.prototype._reset = function(timeout) {
 
 LeagueDetect.prototype._checkForEvent = function(data) {
   if (this._contains('Logging started at ', data)) {
-    console.log('LogStart');
+    if (this.opts.debug) {console.log('LogStart');}
     this.events.emit('LogStart');
     return;
   }
   if (this._contains('Timeout while waiting for client ID', data)) {
-    console.log('LoadConnectError');
+    if (this.opts.debug) {console.log('LoadConnectError');}
     this.events.emit('LoadConnectError');
     return;
   }
   if (this._contains('Received client ID', data) || this._contains('Spectator server version retrieved', data)) {
-    console.log('LoadStart');
+    if (this.opts.debug) {console.log('LoadStart');}
     this.inProgress = true;
     this.events.emit('LoadStart');
     return;
   }
   if (this._contains('GAMESTATE_GAMELOOP HUDProcess', data)) {
-    console.log('GameStart');
+    if (this.opts.debug) {console.log('GameStart');}
     this.events.emit('GameStart');
     return;
   }
   if (this._contains('ERROR| Failed to connect to ', data)) {
-    console.log('ReplayConnectError');
+    if (this.opts.debug) {console.log('ReplayConnectError');}
     this.events.emit('ReplayConnectError');
     return;
   }
   if (this._contains('ERROR| Replay download disabled', data)) {
-    console.log('ReplayEndGameError');
+    if (this.opts.debug) {console.log('ReplayEndGameError');}
     this.events.emit('ReplayEndGameError');
     return;
   }
   if (this._contains('ERROR| Crash occurred', data)) {
-    console.log('CrashError');
+    if (this.opts.debug) {console.log('CrashError');}
     this.events.emit('CrashError');
     return;
   }
   if (this._contains('Finished Main Loop', data)) {
-    console.log('GameEnd');
+    if (this.opts.debug) {console.log('GameEnd');}
     this.events.emit('GameEnd');
     return;
   }
   if (this._contains('Exiting WinMain', data)) {
-    console.log('LogEnd');
+    if (this.opts.debug) {console.log('LogEnd');}
     this.events.emit('LogEnd');
     this._reset(true);
     return;
@@ -195,8 +195,5 @@ LeagueDetect.prototype._timestampDiff = function(timestamp, interval, target) {
   var b = moment(new Date());
   return b.diff(a, interval) < target;
 }
-
-var opts = {path: 'E:\\Applications\\League of Legends'}
-var ld = new LeagueDetect(opts);
 
 module.exports = LeagueDetect;
