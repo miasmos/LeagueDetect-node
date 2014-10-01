@@ -18,7 +18,8 @@ ld.events.on('LoadStart', function(evt) {
   
 Events
 ======
-
+  
+Waiting  
 LogStart  
 LoadStart  
 GameStart  
