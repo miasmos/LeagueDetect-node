@@ -9,8 +9,8 @@ function LeagueDetect(opts) {
     this.opts = opts;
   }
 
-  if (!this.opts.path) {
-    this.opts.path = 'C:\\Riot Games\\League of Legends';
+  if (typeof this.opts.path === 'undefined') {
+    this.opts.path = 'E:\\Applications\\Riot Games\\League of Legends';
   }
   this.opts.fullpath = this.opts.path + '\\Logs\\Game - R3d Logs\\';
 
@@ -74,7 +74,7 @@ LeagueDetect.prototype._checkForEvent = function(data) {
     this.events.emit('LogStart');
     return;
   }
-  if (this._contains('Timeout while waiting for client ID', data)) {
+  if (this._contains('Timeout while waiting for client ID', data) || this._contains('GetGameMetaData error. HTTP status code: 404', data)) {
     if (this.opts.debug) {console.log('LoadConnectError');}
     this.events.emit('LoadConnectError');
     return;
@@ -105,7 +105,7 @@ LeagueDetect.prototype._checkForEvent = function(data) {
     this.events.emit('CrashError');
     return;
   }
-  if (this._contains('Finished Main Loop', data)) {
+  if (this._contains('End game message processing'), data) {
     if (this.opts.debug) {console.log('GameEnd');}
     this.events.emit('GameEnd');
     return;
